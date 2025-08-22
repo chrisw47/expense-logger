@@ -27,10 +27,10 @@ The system uses the following predefined categories:
 - matplotlib
 - numpy
 
-Install dependeices:
+Install dependencies:
 
 ```
-pip install pandas matplotlib numpy`
+pip install pandas matplotlib numpy
 ```
 
 ## Usage
