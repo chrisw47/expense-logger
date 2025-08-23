@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-EXP_MONTH = pd.to_datetime('2025-09').to_period('M')  # set month of expense
+input_month = input('Please enter the month you\'d like to log in \"YYYY-MM\" format.')
+EXP_MONTH = pd.to_datetime(input_month).to_period('M')  # set month of expense
 
 mapping = {1: 'Basic life expenses',
            2: 'Health',
@@ -143,11 +144,67 @@ def calculate_monthly_totals(exp_df: pd.DataFrame, cleaned_df: pd.DataFrame, mon
 
     return update_totals(str(EXP_MONTH), monthly_file, income, total_costs, change_in_net_worth)
 
+def plot_monthly_trends(monthly_expenses: pd.ExcelFile):
+    '''
+    Takes a monthly trends file (in this code, its variable name is `total_init` below) and plots income, total expenses, and change in net worth as a function of month.
+    '''
+
+    df = pd.read_excel(monthly_expenses, names=['Month', 'Income', 'Total Expenses', 'Approx. Change in Net Worth'])
+    x, y_inc, y_exp, y_delta = df['Month'], df['Income'], df['Total Expenses'], df['Approx. Change in Net Worth']
+
+    plt.figure(figsize=(9,6), facecolor='lightcyan', edgecolor='lightskyblue', layout='constrained')
+    plt.plot(x, y_inc, marker='o', linestyle='--', c='deepskyblue', label='Income')
+    plt.plot(x, y_exp, marker='o', linestyle='--', c='maroon', label='Total Expenses')
+    plt.plot(x, y_delta, marker='o', linestyle='--', c='chartreuse', label='Change in Net Worth')
+    plt.xlabel('Month', fontsize=12)
+    plt.ylabel('Dollar amount ($)', fontsize=12)
+    plt.ylim(bottom=0)
+    plt.title('Monthly Plots for Income, Total Expenses, and Change in Net Worth.', fontsize=14)
+    plt.legend(fontsize=11)
+    plt.savefig('monthly-totals.png', dpi=400)
+    plt.show()
+
+
+
+
+# expense_dict = {
+#     'Expense Name': ['Income 12/1-12/15',
+#                      'Rent',
+#                      'Groceries',
+#                      'Roth IRA contribution',
+#                      'Misc. foods',
+#                      'Subs (overleaf, spotify, etc.)',
+#                      'Gas'],
+#     'Expense Class': [7,
+#                       1,
+#                       1,
+#                       3,
+#                       4,
+#                       5,
+#                       6],
+#     'Change in Net Worth': [3000,
+#                             -1400,
+#                             -150,
+#                             -500,
+#                             -250,
+#                             -40,
+#                             -80]
+#     }
+
 expense_dict = {
-    'Expense Name': ['Income'],
-    'Expense Class': [7],
-    'Change in Net Worth': [2500]
-    }
+    'Expense Name': ['Income 12/15-12/31',
+                     'Groceries',
+                     'Gas',
+                     'Registration for Half Marathon'],
+    'Expense Class': [7,
+                      1,
+                      6,
+                      2],
+    'Change in Net Worth': [3000,
+                            -250,
+                            -70,
+                            -150]
+}
 
 if __name__ == "__main__":
     # Clean data to exclude total and income for expense visualization
@@ -162,14 +219,16 @@ if __name__ == "__main__":
 
     if totals_init == 'None':
         totals_init = None
+    
+    plot_monthly_trends(totals_init)
 
-    expense_file = initialize(expense_init)
-    expense_file = update_expenses(
-        expense_file, expense_dict)  # update expenses log
+    # expense_file = initialize(expense_init)
+    # expense_file = update_expenses(
+    #     expense_file, expense_dict)  # update expenses log
 
-    cleaned_expenses = clean_expenses(expense_file)
+    # cleaned_expenses = clean_expenses(expense_file)
 
-    monthly_totals = calculate_monthly_totals(
-        expense_file, cleaned_expenses, totals_init)
-    expense_file.to_excel(str(EXP_MONTH) + '.xlsx', index=False)
-    monthly_totals.to_excel('monthly totals.xlsx', index=False)
+    # monthly_totals = calculate_monthly_totals(
+    #     expense_file, cleaned_expenses, totals_init)
+    # expense_file.to_excel(str(EXP_MONTH) + '.xlsx', index=False)
+    # monthly_totals.to_excel('monthly totals.xlsx', index=False)

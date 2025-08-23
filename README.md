@@ -21,6 +21,16 @@ The system uses the following predefined categories:
 6. Transportation
 7. Income
 
+You will need to write a dictionary containing your expenses in the form before running the main script:
+
+```
+expenses_dict = {
+    'Expense Name': [list of expense names],
+    'Expense Class': [list of expense classes adhering to predefined categories],
+    'Change in Net Worth': [list of expense quantities; expenses have a negative sign while incomes are positive]
+}
+```
+
 ## Requirements
 
 - pandas
@@ -81,3 +91,5 @@ EXP_MONTH = pd.to_datetime('2025-09').to_period('M')
 ```
 
 Modify the `expense_dict` variable to add your specific expenses before running.
+
+*Note that the auxiliary attached files are example monthly excel spreadsheets and monthly total trend graphs.*
