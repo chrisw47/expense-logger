@@ -144,12 +144,12 @@ def calculate_monthly_totals(exp_df: pd.DataFrame, cleaned_df: pd.DataFrame, mon
 
     return update_totals(str(EXP_MONTH), monthly_file, income, total_costs, change_in_net_worth)
 
-def plot_monthly_trends(monthly_expenses: pd.ExcelFile):
+def plot_monthly_trends(monthly_expenses: pd.DataFrame):
     '''
     Takes a monthly trends file (in this code, its variable name is `total_init` below) and plots income, total expenses, and change in net worth as a function of month.
     '''
 
-    df = pd.read_excel(monthly_expenses, names=['Month', 'Income', 'Total Expenses', 'Approx. Change in Net Worth'])
+    df = monthly_expenses
     x, y_inc, y_exp, y_delta = df['Month'], df['Income'], df['Total Expenses'], df['Approx. Change in Net Worth']
 
     plt.figure(figsize=(9,6), facecolor='lightcyan', edgecolor='lightskyblue', layout='constrained')
@@ -165,7 +165,45 @@ def plot_monthly_trends(monthly_expenses: pd.ExcelFile):
     plt.show()
 
 
+expense_dict = {
+    'Expense Name': ['Income',
+                     'Rent'],
+    'Expense Class': [7,
+                      1],
+    'Change in Net Worth': [3000,
+                            -1400]
+}
 
+if __name__ == "__main__":
+    # Clean data to exclude total and income for expense visualization
+
+    expense_init = input(
+        'Name the expense file you would like to update. If you want to initialize a file, write None.')  # takes user input
+    totals_init = input(
+        'Name the monthly totals file you would like to use/update. If you want to initialize a file, write None.')
+
+    if expense_init == 'None':  # Change None inputs to `None`.
+        expense_init = None
+
+    if totals_init == 'None':
+        totals_init = None
+    
+
+    expense_file = initialize(expense_init)
+    expense_file = update_expenses(
+        expense_file, expense_dict)  # update expenses log
+
+    cleaned_expenses = clean_expenses(expense_file)
+
+    monthly_totals = calculate_monthly_totals(
+        expense_file, cleaned_expenses, totals_init)
+    
+    plot_monthly_trends(monthly_totals)
+    expense_file.to_excel(str(EXP_MONTH) + '.xlsx', index=False)
+    monthly_totals.to_excel('monthly totals.xlsx', index=False)
+
+
+# # # Example expense dictionaries
 
 # expense_dict = {
 #     'Expense Name': ['Income 12/1-12/15',
@@ -191,44 +229,17 @@ def plot_monthly_trends(monthly_expenses: pd.ExcelFile):
 #                             -80]
 #     }
 
-expense_dict = {
-    'Expense Name': ['Income 12/15-12/31',
-                     'Groceries',
-                     'Gas',
-                     'Registration for Half Marathon'],
-    'Expense Class': [7,
-                      1,
-                      6,
-                      2],
-    'Change in Net Worth': [3000,
-                            -250,
-                            -70,
-                            -150]
-}
-
-if __name__ == "__main__":
-    # Clean data to exclude total and income for expense visualization
-
-    expense_init = input(
-        'Name the expense file you would like to update. If you want to initialize a file, write None.')  # takes user input
-    totals_init = input(
-        'Name the monthly totals file you would like to use/update. If you want to initialize a file, write None.')
-
-    if expense_init == 'None':  # Change None inputs to `None`.
-        expense_init = None
-
-    if totals_init == 'None':
-        totals_init = None
-    
-    plot_monthly_trends(totals_init)
-
-    # expense_file = initialize(expense_init)
-    # expense_file = update_expenses(
-    #     expense_file, expense_dict)  # update expenses log
-
-    # cleaned_expenses = clean_expenses(expense_file)
-
-    # monthly_totals = calculate_monthly_totals(
-    #     expense_file, cleaned_expenses, totals_init)
-    # expense_file.to_excel(str(EXP_MONTH) + '.xlsx', index=False)
-    # monthly_totals.to_excel('monthly totals.xlsx', index=False)
+# expense_dict = {
+#     'Expense Name': ['Income 12/15-12/31',
+#                      'Groceries',
+#                      'Gas',
+#                      'Registration for Half Marathon'],
+#     'Expense Class': [7,
+#                       1,
+#                       6,
+#                       2],
+#     'Change in Net Worth': [3000,
+#                             -250,
+#                             -70,
+#                             -150]
+# }
