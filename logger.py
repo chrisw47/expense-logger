@@ -2,7 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-input_month = input('Please enter the month you\'d like to log in \"YYYY-MM\" format.')
+input_month = input(
+    'Please enter the month you\'d like to log in \"YYYY-MM\" format.')
 EXP_MONTH = pd.to_datetime(input_month).to_period('M')  # set month of expense
 
 mapping = {1: 'Basic life expenses',
@@ -11,7 +12,8 @@ mapping = {1: 'Basic life expenses',
            4: 'Misc. Wants',
            5: 'Subscriptions',
            6: 'Transportation',
-           7: 'Income',
+           7: 'Travel',
+           8: 'Income',
            ' ': ' '
            }
 
@@ -21,7 +23,8 @@ mapping_inverse = {'Basic life expenses': 1,
                    'Misc. Wants': 4,
                    'Subscriptions': 5,
                    'Transportation': 6,
-                   'Income': 7,
+                   'Travel': 7,
+                   'Income': 8,
                    ' ': ' '
                    }
 
@@ -144,6 +147,7 @@ def calculate_monthly_totals(exp_df: pd.DataFrame, cleaned_df: pd.DataFrame, mon
 
     return update_totals(str(EXP_MONTH), monthly_file, income, total_costs, change_in_net_worth)
 
+
 def plot_monthly_trends(monthly_expenses: pd.DataFrame):
     '''
     Takes a monthly trends file (in this code, its variable name is `total_init` below) and plots income, total expenses, and change in net worth as a function of month.
@@ -152,26 +156,27 @@ def plot_monthly_trends(monthly_expenses: pd.DataFrame):
     df = monthly_expenses
     x, y_inc, y_exp, y_delta = df['Month'], df['Income'], df['Total Expenses'], df['Approx. Change in Net Worth']
 
-    plt.figure(figsize=(9,6), facecolor='lightcyan', edgecolor='lightskyblue', layout='constrained')
-    plt.plot(x, y_inc, marker='o', linestyle='--', c='deepskyblue', label='Income')
-    plt.plot(x, y_exp, marker='o', linestyle='--', c='maroon', label='Total Expenses')
-    plt.plot(x, y_delta, marker='o', linestyle='--', c='chartreuse', label='Change in Net Worth')
+    plt.figure(figsize=(9, 6), facecolor='lightcyan',
+               edgecolor='lightskyblue', layout='constrained')
+    plt.plot(x, y_inc, marker='o', linestyle='--',
+             c='deepskyblue', label='Income')
+    plt.plot(x, y_exp, marker='o', linestyle='--',
+             c='maroon', label='Total Expenses')
+    plt.plot(x, y_delta, marker='o', linestyle='--',
+             c='chartreuse', label='Change in Net Worth')
     plt.xlabel('Month', fontsize=12)
     plt.ylabel('Dollar amount ($)', fontsize=12)
-    plt.ylim(bottom=0)
-    plt.title('Monthly Plots for Income, Total Expenses, and Change in Net Worth.', fontsize=14)
+    plt.title(
+        'Monthly Plots for Income, Total Expenses, and Change in Net Worth.', fontsize=14)
     plt.legend(fontsize=11)
     plt.savefig('monthly-totals.png', dpi=400)
     plt.show()
 
 
 expense_dict = {
-    'Expense Name': ['Income',
-                     'Rent'],
-    'Expense Class': [7,
-                      1],
-    'Change in Net Worth': [3000,
-                            -1400]
+    'Expense Name': [],
+    'Expense Class': [],
+    'Change in Net Worth': []
 }
 
 if __name__ == "__main__":
@@ -187,7 +192,6 @@ if __name__ == "__main__":
 
     if totals_init == 'None':
         totals_init = None
-    
 
     expense_file = initialize(expense_init)
     expense_file = update_expenses(
@@ -197,10 +201,10 @@ if __name__ == "__main__":
 
     monthly_totals = calculate_monthly_totals(
         expense_file, cleaned_expenses, totals_init)
-    
+
     plot_monthly_trends(monthly_totals)
-    expense_file.to_excel(str(EXP_MONTH) + '.xlsx', index=False)
-    monthly_totals.to_excel('monthly totals.xlsx', index=False)
+    expense_file.to_excel('my files/' + str(EXP_MONTH) + '.xlsx', index=False)
+    monthly_totals.to_excel('my files/monthly totals.xlsx', index=False)
 
 
 # # # Example expense dictionaries
