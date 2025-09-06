@@ -2,9 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-input_month = input(
+INPUT_MONTH = input(
     'Please enter the month you\'d like to log in \"YYYY-MM\" format.')
-EXP_MONTH = pd.to_datetime(input_month).to_period('M')  # set month of expense
+EXP_MONTH = pd.to_datetime(INPUT_MONTH).to_period('M')  # set month of expense
 
 mapping = {1: 'Basic life expenses \n (rent)',
            2: 'Basic life expenses \n (utilities)',
