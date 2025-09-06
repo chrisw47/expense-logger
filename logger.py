@@ -6,25 +6,29 @@ input_month = input(
     'Please enter the month you\'d like to log in \"YYYY-MM\" format.')
 EXP_MONTH = pd.to_datetime(input_month).to_period('M')  # set month of expense
 
-mapping = {1: 'Basic life expenses',
-           2: 'Health',
-           3: 'Investments',
-           4: 'Misc. Wants',
-           5: 'Subscriptions',
-           6: 'Transportation',
-           7: 'Travel',
-           8: 'Income',
+mapping = {1: 'Basic life expenses \n (rent)',
+           2: 'Basic life expenses \n (utilities)',
+           3: 'Basic life expenses \n (misc, incl. food and home items)',
+           4: 'Health',
+           5: 'Investments',
+           6: 'Misc. Wants',
+           7: 'Subscriptions',
+           8: 'Transportation',
+           9: 'Travel',
+           10: 'Income',
            ' ': ' '
            }
 
-mapping_inverse = {'Basic life expenses': 1,
-                   'Health': 2,
-                   'Investments': 3,
-                   'Misc. Wants': 4,
-                   'Subscriptions': 5,
-                   'Transportation': 6,
-                   'Travel': 7,
-                   'Income': 8,
+mapping_inverse = {'Basic life expenses \n (rent)': 1,
+                   'Basic life expenses \n (utilities)': 2,
+                   'Basic life expenses \n (misc, incl. food and home items)': 3,
+                   'Health': 4,
+                   'Investments': 5,
+                   'Misc. Wants': 6,
+                   'Subscriptions': 7,
+                   'Transportation': 8,
+                   'Travel': 9,
+                   'Income': 10,
                    ' ': ' '
                    }
 
@@ -121,9 +125,9 @@ def plot_expenses(cleaned_df: pd.DataFrame) -> np.ndarray:
     def autopct_fn(val):  # autopct function to display absolute values instead of percentages
         return f'${np.round(val/100*amounts.sum(),2)}'
 
-    fig, ax = plt.subplots()
-    colors = ['lightcoral', 'peachpuff', 'lemonchiffon',
-              'palegreen', 'lightskyblue', 'lavender']  # color map
+    fig, ax = plt.subplots(figsize=(18,18))
+    colors = ['lightcoral', 'maroon', 'peachpuff', 'lemonchiffon',
+              'palegreen', 'aquamarine', 'lightskyblue', 'lavender', 'orchid']  # color map
     ax.pie(amounts, labels=labels,
            autopct=autopct_fn, colors=colors)
     plt.text(
@@ -156,7 +160,7 @@ def plot_monthly_trends(monthly_expenses: pd.DataFrame):
     df = monthly_expenses
     x, y_inc, y_exp, y_delta = df['Month'], df['Income'], df['Total Expenses'], df['Approx. Change in Net Worth']
 
-    plt.figure(figsize=(9, 6), facecolor='lightcyan',
+    plt.figure(figsize=(18, 12), facecolor='lightcyan',
                edgecolor='lightskyblue', layout='constrained')
     plt.plot(x, y_inc, marker='o', linestyle='--',
              c='deepskyblue', label='Income')
